@@ -1,0 +1,25 @@
+##
+## Build
+##
+
+FROM golang:1.7.3-alpine as build
+
+WORKDIR /app
+
+COPY main.go ./
+
+RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o /docker-desafio-1
+
+ENTRYPOINT [ "/docker-desafio-1" ]
+
+##
+## Deploy
+##
+
+FROM scratch
+
+WORKDIR /app
+
+COPY --from=build /docker-desafio-1 /docker-desafio-1
+
+ENTRYPOINT ["/docker-desafio-1"]
